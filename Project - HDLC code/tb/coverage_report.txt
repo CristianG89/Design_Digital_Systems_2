@@ -1,0 +1,278 @@
+COVERGROUP COVERAGE:
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Covergroup                                             Metric       Goal    Status                Persistent Memory   Transient Memory     Peak Transient    PeakTransMemory
+                                                                                                                                                Memory              Time
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ TYPE /test_hdlc/u_testPr/Tx_CoverGroup                100.0%        100    Covered                           8.3KB              2.3KB              2.9KB            1000 ns
+    covered/total bins:                                    23         23                                   8.3KB              2.3KB              2.9KB            1000 ns
+    missing/total bins:                                     0         23                                   8.3KB              2.3KB              2.9KB            1000 ns
+    % Hit:                                             100.0%        100                                   8.3KB              2.3KB              2.9KB            1000 ns
+    Coverpoint Tx_CoverGroup::Tx                       100.0%        100    Covered                            288B               224B               224B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_ValidFrame            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_AbortedTrans          100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_RdBuff                100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_Done                  100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_Full                  100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_DataAvail             100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_FrameSize             100.0%        100    Covered                            528B               552B               552B            1250 ns
+        covered/total bins:                                 3          3                                      na                 na                 na                 na
+        missing/total bins:                                 0          3                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_DataOutBuff           100.0%        100    Covered                            288B               216B               216B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_Enable                100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Tx_CoverGroup::Tx_AbortFrame            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+ Covergroup instance \/test_hdlc/u_testPr/Tx_Object
+                                                       100.0%        100    Covered                           8.3KB              2.3KB              2.9KB            1000 ns
+    covered/total bins:                                    23         23                                   8.3KB              2.3KB              2.9KB            1000 ns
+    missing/total bins:                                     0         23                                   8.3KB              2.3KB              2.9KB            1000 ns
+    % Hit:                                             100.0%        100                                   8.3KB              2.3KB              2.9KB            1000 ns
+    Coverpoint Tx                                      100.0%        100    Covered                            288B               224B               224B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx                                          57          1    Covered                              na                 na                 na                 na
+        bin Tx                                           4371          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_ValidFrame                           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_ValidFrame                             4273          1    Covered                              na                 na                 na                 na
+        bin Tx_ValidFrame                                 155          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_AbortedTrans                         100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_AbortedTrans                           4330          1    Covered                              na                 na                 na                 na
+        bin Tx_AbortedTrans                                98          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_RdBuff                               100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_RdBuff                                 4417          1    Covered                              na                 na                 na                 na
+        bin Tx_RdBuff                                      11          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_Done                                 100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_Done                                    640          1    Covered                              na                 na                 na                 na
+        bin Tx_Done                                      3788          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_Full                                 100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_Full                                   4418          1    Covered                              na                 na                 na                 na
+        bin Tx_Full                                        10          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_DataAvail                            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_DataAvail                              4080          1    Covered                              na                 na                 na                 na
+        bin Tx_DataAvail                                  348          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_FrameSize                            100.0%        100    Covered                            528B               552B               552B            1250 ns
+        covered/total bins:                                 3          3                                      na                 na                 na                 na
+        missing/total bins:                                 0          3                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin Tx_FrameSize_Zero                            3874          1    Covered                              na                 na                 na                 na
+        bin Tx_FrameSize_Valid                            453          1    Covered                              na                 na                 na                 na
+        bin Tx_FrameSize_Overflow                         101          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_DataOutBuff                          100.0%        100    Covered                            288B               216B               216B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin Tx_DataOutBuff_Zero                          4076          1    Covered                              na                 na                 na                 na
+        bin Tx_DataOutBuff_Valid                          352          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_Enable                               100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_Enable                                 4422          1    Covered                              na                 na                 na                 na
+        bin Tx_Enable                                       6          1    Covered                              na                 na                 na                 na
+    Coverpoint Tx_AbortFrame                           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Tx_AbortFrame                             4427          1    Covered                              na                 na                 na                 na
+        bin Tx_AbortFrame                                   1          1    Covered                              na                 na                 na                 na
+ TYPE /test_hdlc/u_testPr/Rx_CoverGroup                100.0%        100    Covered                          10.5KB              2.7KB              3.4KB            1000 ns
+    covered/total bins:                                    29         29                                  10.5KB              2.7KB              3.4KB            1000 ns
+    missing/total bins:                                     0         29                                  10.5KB              2.7KB              3.4KB            1000 ns
+    % Hit:                                             100.0%        100                                  10.5KB              2.7KB              3.4KB            1000 ns
+    Coverpoint Rx_CoverGroup::Rx                       100.0%        100    Covered                            288B               240B               240B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_ValidFrame            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_EoF                   100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_AbortSignal           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_FrameError            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_FlagDetect            100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_AbortDetect           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::RxD                      100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_FCSerr                100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_Ready                 100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_FrameSize             100.0%        100    Covered                            528B               552B               552B            1250 ns
+        covered/total bins:                                 3          3                                      na                 na                 na                 na
+        missing/total bins:                                 0          3                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_Overflow              100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_FCSen                 100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+    Coverpoint Rx_CoverGroup::Rx_Drop                  100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+ Covergroup instance \/test_hdlc/u_testPr/Rx_Object
+                                                       100.0%        100    Covered                          10.5KB              2.7KB              3.4KB            1000 ns
+    covered/total bins:                                    29         29                                  10.5KB              2.7KB              3.4KB            1000 ns
+    missing/total bins:                                     0         29                                  10.5KB              2.7KB              3.4KB            1000 ns
+    % Hit:                                             100.0%        100                                  10.5KB              2.7KB              3.4KB            1000 ns
+    Coverpoint Rx                                      100.0%        100    Covered                            288B               240B               240B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx                                        2640          1    Covered                              na                 na                 na                 na
+        bin Rx                                           1770          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_ValidFrame                           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_ValidFrame                             1681          1    Covered                              na                 na                 na                 na
+        bin Rx_ValidFrame                                2747          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_EoF                                  100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_EoF                                    4415          1    Covered                              na                 na                 na                 na
+        bin Rx_EoF                                         13          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_AbortSignal                          100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_AbortSignal                            4285          1    Covered                              na                 na                 na                 na
+        bin Rx_AbortSignal                                143          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_FrameError                           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+		% Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_FrameError                             4241          1    Covered                              na                 na                 na                 na
+        bin Rx_FrameError                                 187          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_FlagDetect                           100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_FlagDetect                             4404          1    Covered                              na                 na                 na                 na
+        bin Rx_FlagDetect                                  23          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_AbortDetect                          100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_AbortDetect                            4423          1    Covered                              na                 na                 na                 na
+        bin Rx_AbortDetect                                  5          1    Covered                              na                 na                 na                 na
+    Coverpoint RxD                                     100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_RxD                                       2673          1    Covered                              na                 na                 na                 na
+        bin RxD                                          1737          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_FCSerr                               100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_FCSerr                                 4427          1    Covered                              na                 na                 na                 na
+        bin Rx_FCSerr                                       1          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_Ready                                100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_Ready                                  4179          1    Covered                              na                 na                 na                 na
+        bin Rx_Ready                                      249          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_FrameSize                            100.0%        100    Covered                            528B               552B               552B            1250 ns
+        covered/total bins:                                 3          3                                      na                 na                 na                 na
+        missing/total bins:                                 0          3                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin Rx_FrameSize_Zero                            3460          1    Covered                              na                 na                 na                 na
+        bin Rx_FrameSize_Valid                            828          1    Covered                              na                 na                 na                 na
+        bin Rx_FrameSize_Overflow                         140          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_Overflow                             100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_Overflow                               4321          1    Covered                              na                 na                 na                 na
+        bin Rx_Overflow                                   107          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_FCSen                                100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_FCSen                                  4312          1    Covered                              na                 na                 na                 na
+        bin Rx_FCSen                                      116          1    Covered                              na                 na                 na                 na
+    Coverpoint Rx_Drop                                 100.0%        100    Covered                            288B               208B               208B            1250 ns
+        covered/total bins:                                 2          2                                      na                 na                 na                 na
+        missing/total bins:                                 0          2                                      na                 na                 na                 na
+        % Hit:                                         100.0%        100                                      na                 na                 na                 na
+        bin No_Rx_Drop                                   4427          1    Covered                              na                 na                 na                 na
+        bin Rx_Drop                                         1          1    Covered                              na                 na                 na                 na
+
+TOTAL COVERGROUP COVERAGE: 100.0%  COVERGROUP TYPES: 2
+COVERGROUP MEMORY USAGE: Total 71.7KB, Peak 71.7KB at time 2214750 ns for total 25 coverpoints/crosses.

@@ -1,0 +1,122 @@
+// @lang=tda @ts=2
+
+module readserial_property(clk, reset_n, rxd, valid, data, state_s, cnt_en, cnt_s);
+	input logic clk;			//clock signal
+	input logic reset_n;		//reset signal
+	input logic rxd;			//serial in
+	input logic [7:0] data;		//data out
+	input logic valid;			//data valid
+	input logic state_s;		//FSM state
+	input logic cnt_en;			//counter enable
+	input integer cnt_s;		//counter value
+
+	parameter IDLE		= 2'b00;
+	parameter READDATA	= 2'b01;
+
+	`define true 1
+	`include "tidal.sv"
+
+	`begin_tda(ops)
+
+		//Sequences
+		sequence reset_sequence;					//Sequences should always be purely combinational, never should have time statement "t##x"
+			reset_n == 1'b0;						//(even though it is possible, it is a bad practise...)
+		endsequence;
+
+		sequence in_idle_counter_is_0;				//In this context, this sequence is a reachability constraint (cnt_s is INVARIANT in state IDLE)
+			state_s == READDATA or cnt_s == 0;		//Either the state is READDATA (cnt_s is changing) or cnt_s is 0 (so IDLE state)
+		endsequence;
+
+		sequence in_idle_counter_not_enabled;		//In this context, this sequence is a reachability constraint (cnt_en is INVARIANT in state IDLE)
+			state_s == READDATA or cnt_en == 1'b0;	//Either the state is READDATA (cnt_en is high) or cnt_en is 0 (so IDLE state)
+		endsequence;
+
+		//Properties
+		property reset;
+			reset_sequence |=>				//I had written this property slightly different at the beginning (anyway 100% equivalent to hold it),
+			t ##0 state_s == IDLE and		//but later, in order to work with the file "completeness.gfv", the property must be specifically written
+			t ##0 cnt_s == 0 and			//as here shown because the previous file has been defined to expect this particular structure...
+			t ##0 cnt_en == 1'b0 and
+			t ##0 valid == 1'b0;
+		endproperty;
+
+		property stay_in_idle;
+			t ##0 state_s == IDLE and	//While I receive rxd=1 in IDLE state...
+			t ##0 rxd == 1'b1 and 		//1=line in stand-by / 0=start bit
+			t ##0 cnt_s == 0 and
+			t ##0 cnt_en == 1'b0
+			//t ##0 valid == 1'b0		//valid could be either 1 or 0, depending on the previous property (read_byte or stay_in_idle respectively)
+			implies
+			t ##1 state_s == IDLE and	//I remain in such state
+			t ##1 cnt_s == 0 and
+			t ##1 cnt_en == 1'b0 and
+			t ##1 valid == 1'b0;		//One clock later, valid can only be 0
+		endproperty;
+
+		property read_byte;
+			logic [7:0] out_byte;
+
+			t ##0 state_s == IDLE and				//While I receive rxd=1 in IDLE state...
+			t ##0 rxd == 1'b0	and					//1=line in stand-by / 0=start bit
+			t ##0 in_idle_counter_is_0 and
+			t ##0 in_idle_counter_not_enabled and
+			//t ##0 cnt_s == 0 and			//HABLAR CON ASSISTANTS SOBRE QUE ES EL FALSE NEGATIVE Y COMO FUNCIONA (COMPARAR CON TODAS LAS NOTAS QUE HE ESCRITO EN EL PDF!!)
+			//t ##1 cnt_s == 0 and			//Y APUNTAR TODO ESTO EN LAS SLIDES!!!!!!!!!!!!!
+			t ##8 set_freeze(out_byte, {$past(rxd,7), $past(rxd,6), $past(rxd,5), $past(rxd,4), $past(rxd,3), $past(rxd,2), $past(rxd,1), $past(rxd,0)})
+			implies
+			t ##1 state_s == READDATA[*8] and		//Reading the byte
+			t ##1 valid == 1'b0[*8] and				//If the range is below 8 (having here another checking in 9 too), the "completeness" complains...
+			t ##1 (cnt_s >= $past(cnt_s))[*8] and
+			t ##1 cnt_en == 1'b1[*8] and
+			t ##9 state_s == IDLE and 				//Once byte is completely received (start bit + 8 bits), it goes back to IDLE
+			t ##9 valid == 1'b1 and					//valid is only 1 after one complete receive
+			t ##9 in_idle_counter_is_0 and
+			t ##9 in_idle_counter_not_enabled and
+			t ##9 data == out_byte;
+		endproperty;
+
+		property in_idle_counter_is_0__step;
+			t ##0 in_idle_counter_is_0 and			//Only one more time cnt_s must be fixed to 0,
+			t ##1 in_idle_counter_is_0				//because this is the time that the read operation (in the design) does not modify it.
+			implies
+			t ##2 in_idle_counter_is_0;
+		endproperty;
+
+		property in_idle_counter_is_0__base;
+			t ##0 $past(reset_n)==1'b0
+			implies
+			t ##0 in_idle_counter_is_0;
+		endproperty;
+
+		property in_idle_counter_not_enabled__step;
+			t ##0 in_idle_counter_not_enabled
+			implies
+			t ##1 in_idle_counter_not_enabled;
+		endproperty;
+
+		property in_idle_counter_not_enabled__base;
+			t ##0 $past(reset_n)==1'b0
+			implies
+			t ##0 in_idle_counter_not_enabled;
+		endproperty;
+
+		//Assert your properties
+		//1.2 Verify that after reset, the controller is in state IDLE and the counter is reset to 0. Verify the correct output behavior.
+		a_reset: assert property(@(posedge clk) reset);
+		//1.3 Verify the controller stays in state IDLE if no start bit arrives. Verify the correct output behavior for this case.
+		a_stay_in_idle: assert property(@(posedge clk) disable iff (!reset_n) stay_in_idle);
+		//1.4-1.5 Assume we are in IDLE and a start bit is detected. Then check the values of the outputs and that the controller returns to IDLE after 8 data bits.
+		a_read_byte: assert property(@(posedge clk) disable iff (!reset_n) read_byte);
+		//1.6-1.7 Prove (and improve for n+1 cycles) the validity of the previous reachability constraints.
+		a_in_idle_counter_is_0__step: assert property(@(posedge clk) disable iff (!reset_n) in_idle_counter_is_0__step);
+		a_in_idle_counter_is_0__base: assert property(@(posedge clk) disable iff (!reset_n) in_idle_counter_is_0__base);
+		a_in_idle_counter_not_enabled__step: assert property(@(posedge clk) disable iff (!reset_n) in_idle_counter_not_enabled__step);
+		a_in_idle_counter_not_enabled__base: assert property(@(posedge clk) disable iff (!reset_n) in_idle_counter_not_enabled__base);
+
+	`end_tda
+
+endmodule
+
+// your bind statement
+//All logic inputs are added with ".*" (but then they should have the same name as the VHDL file!!)
+bind readserial readserial_property readserial_bind(.*);

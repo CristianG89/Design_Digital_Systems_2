@@ -1,0 +1,24 @@
+// @lang=vli @ts=2
+
+completeness readserial;
+disable iff: (!reset_n); 
+inputs: reset_n, rxd;
+
+determination_requirements:
+  determined(valid);
+  if (valid) determined(data); endif;
+
+reset_property:
+  sva/readserial_bind/ops/a_reset;		//Necessary statement to start the checking with a reset (so all I/O defined)
+
+//Except for reset, all possible combinations of defined properties must be written here... only then one can say this suite covers all possible scenarios
+property_graph:			// Induction step and Induction base do not need to be tested...
+  sva/readserial_bind/ops/a_reset -> sva/readserial_bind/ops/a_stay_in_idle;
+  sva/readserial_bind/ops/a_reset -> sva/readserial_bind/ops/a_read_byte;
+  sva/readserial_bind/ops/a_stay_in_idle -> sva/readserial_bind/ops/a_stay_in_idle;
+  sva/readserial_bind/ops/a_stay_in_idle -> sva/readserial_bind/ops/a_read_byte;
+  sva/readserial_bind/ops/a_read_byte -> sva/readserial_bind/ops/a_stay_in_idle;
+  sva/readserial_bind/ops/a_read_byte -> sva/readserial_bind/ops/a_read_byte;
+//These connections show that in the very moment that one property finishes, the next one starts (with overlapping implication). Thats means that one
+//should be aware that the consequent values from the 1st property are not incompatible with the antecedent values from the 2nd property...
+end completeness;

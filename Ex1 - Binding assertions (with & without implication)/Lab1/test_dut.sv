@@ -1,0 +1,64 @@
+module test_dut;
+	bit sys_clk,sys_req;
+	wire sys_gnt;
+
+	/* Instantiate 'dut' */
+
+	dut dut1 (
+		.clk(sys_clk),
+		.req(sys_req),
+		.gnt(sys_gnt)
+	);
+
+	/************** START FOR ADDED CODE *******************/
+
+	//Bending between the module (dut1) and its property (dut_property)
+	bind dut1 dut_property instance_of_bind (
+		.pclk(clk),     //Write property signal and module port between brackets (.XXX)
+		.preq(req),
+		.pgnt(gnt)
+	);
+	/************* END FOR ADDED CODE **********************/
+
+
+	// You need to know the names of the ports in the design and the property module
+	// to be able to bind them. So, here they are:
+
+	// Design module (dut.v)
+	// ----------------------
+	// module dut(clk, req, gnt);
+	//            input logic clk,req;
+	//            output logic gnt;
+
+	// Property module (dut_property.sv)
+	// ---------------------------------
+	//module dut_property(pclk,preq,pgnt);
+	//input pclk,preq,pgnt;
+
+
+	// Now, follow the directions in the README file to compile/simulate...
+
+	//-------------------------------------
+	// LAB EXERCISE - END
+	//-------------------------------------
+
+	always @(posedge sys_clk)
+		$display($stime,,,"clk=%b req=%b gnt=%b",sys_clk,sys_req,sys_gnt);
+
+	always #10 sys_clk = !sys_clk;
+
+	initial		//initial only executes once
+	begin
+		sys_req = 1'b0;
+		@(posedge sys_clk) sys_req = 1'b1; //30
+		@(posedge sys_clk) sys_req = 1'b0; //50
+		@(posedge sys_clk) sys_req = 1'b0; //70
+		@(posedge sys_clk) sys_req = 1'b1; //90
+		@(posedge sys_clk) sys_req = 1'b0; //110
+		@(posedge sys_clk) sys_req = 1'b0; //130
+
+		@(posedge sys_clk);
+		@(posedge sys_clk); $finish(2);
+	end
+
+endmodule

@@ -1,0 +1,56 @@
+// @lang=sva @ts=2
+
+module atm_property_suite(clk, error_i, multiple_i, correct_o, dismiss_o);
+	input logic clk;
+	input logic error_i;
+	input logic multiple_i;
+	input logic correct_o;
+	input logic dismiss_o;
+
+	// sequence definitions
+
+	// property definitions
+
+	//1. A cell is never corrected and dismissed at the same time.
+	property spec1;
+		if (correct_o) !dismiss_o
+		else if (dismiss_o) !correct_o;
+	endproperty
+
+	//2. An error-free cell is neither corrected nor dismissed.
+	property spec2;
+		!error_i |-> (!correct_o && !dismiss_o);
+	endproperty
+
+	//3. All cells with multiple-bit errors are dismissed.
+	property spec3;
+		(error_i and multiple_i) |-> (!correct_o && dismiss_o);
+	endproperty
+
+	//4. A first erroneous cell coming in is corrected if the error is a single-bit error and not a multiple-bit error.
+	property spec4;
+		$rose(error_i) and !multiple_i implies correct_o;
+	endproperty
+
+	//5. A second erroneous cell is always dismissed.
+	property spec5;
+		(error_i and $stable(error_i)) implies dismiss_o;
+	endproperty
+
+	// make assertion on properties to be checked
+	a_spec1: assert property (@(posedge clk) spec1);
+	a_spec2: assert property (@(posedge clk) spec2);
+	a_spec3: assert property (@(posedge clk) spec3);
+	a_spec4: assert property (@(posedge clk) spec4);
+	a_spec5: assert property (@(posedge clk) spec5);
+endmodule
+
+// bind the verification IP to the design
+
+bind atm atm_property_suite atm_bind (
+	clk,
+	error_i,
+	multiple_i,
+	correct_o,
+	dismiss_o
+);

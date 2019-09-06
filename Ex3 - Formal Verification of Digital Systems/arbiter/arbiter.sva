@@ -1,0 +1,79 @@
+	// @lang=sva @ts=2
+
+	//One internal signal (last_grant_s) is missing in this instantiation. If it were added, it would be controlled by the testbench (so random values), not the VHDL file...
+	module arbiter_property_suite (clk, reset, request_i, grant_o, free_i, state_s);
+		input logic clk;
+		input logic reset;
+		input logic [1:0] request_i;
+		input logic [1:0] grant_o;
+		input logic free_i;
+		input logic state_s;
+
+		parameter IDLE = 1'b0;
+		parameter BUSY = 1'b1;
+
+		// sequence definition
+
+		// property definition
+
+		//4.1 Write a property that proves the reset behavior.
+		property check_reset;
+			reset implies state_s==IDLE ##0 grant_o==2'b00;			//"implies" make antecent and consequent start at a time...
+		endproperty
+
+		//4.2 Write a property to check that a first request immediately after reset is granted to master 0 in case the request is a competing one.
+		property competing_after_reset;
+			$past(reset) implies request_i==2'b11 ##0 free_i==1'b1 ##0 state_s==IDLE;
+		endproperty
+		property first_competing;
+			$past(reset) implies ##1 grant_o==2'b01;
+		endproperty
+
+		//4.3 Write a property stating that if there is no request there will be no grant.
+		property no_request;
+			request_i==2'b00 implies ##1 grant_o==2'b00;
+		endproperty
+
+		//4.4 The resource is free and there is a single request from one master. Assume the circuit starts in IDLE state and prove that it returns to IDLE state again
+		property start_IDLE;
+			free_i and (request_i==2'b01 or request_i==2'b10) implies state_s==IDLE;
+		endproperty
+		property single_request;
+			free_i and (request_i==2'b01 or request_i==2'b10) implies ##1 state_s==BUSY ##1 state_s==IDLE;
+		endproperty
+
+		//4.5 Write a property that verifies the correct behavior if two masters request access simultaneously.
+		//Extend your property to show that arbitration switches between the two masters if two consecutive competing requests occur.
+		property simultaneous_twice;
+			//I ensure that system is IDLE and free for everytime there is a simultaneous request as well as the last grant toggles
+			request_i==2'b11 implies state_s==IDLE ##0 free_i ##2 request_i==2'b11;
+		endproperty
+		property arbitration;
+			//VHDL file says that requests are only checked in IDLE state, so simultaneous request should high at least 3 cycles (for IDLE-BUSY-IDLE progression)
+			$past(reset) and request_i==2'b11 implies ##1 grant_o==2'b01 ##1 grant_o==2'b00 ##1 grant_o==2'b10;
+		endproperty
+
+		// assert, assume statement
+		
+		// Some properties are assumptions (not assertions), which means the compiler will assume the behaviour on consequent everytime the antecedent matches.	
+		// As a methodology note, one should use "assume" if writing a property solely based on design inputs. If it is on outputs/internal signals/mix, then use assert.
+		a_spec1: assert property (@(posedge clk) check_reset);
+		a_spec2_1: assume property (@(posedge clk) disable iff (reset) competing_after_reset);
+		a_spec2_2: assert property (@(posedge clk) disable iff (reset) first_competing);
+		a_spec3: assert property (@(posedge clk) disable iff (reset) no_request);
+		a_spec4_1: assume property (@(posedge clk) disable iff (reset) start_IDLE);
+		a_spec4_2: assert property (@(posedge clk) disable iff (reset) single_request);
+		a_spec5_1: assume property (@(posedge clk) disable iff (reset) simultaneous_twice);
+		a_spec5_2: assert property (@(posedge clk) disable iff (reset) arbitration);
+
+	endmodule
+
+	// bind statement
+	bind arbiter arbiter_property_suite arbiter_bind (
+		clk,
+		reset,
+		request_i,
+		grant_o,
+		free_i,
+		state_s
+	);

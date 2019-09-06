@@ -1,0 +1,229 @@
+// @lang=tda @ts=2
+
+module proc_property_suite(reset, clk, IR, REG_FILE, CONTROL_STATE, dataIn, writeEnable, dataOut, dataAddr, instrAddr, instrIn);
+	input logic reset;
+	input logic clk;
+	input logic [15:0] IR;
+	input logic [7:0][7:0] REG_FILE;
+	input logic [2:0] CONTROL_STATE;
+	input logic [7:0] dataIn;
+	input logic writeEnable;
+	input logic [7:0] dataOut;
+	input logic [7:0] dataAddr;
+	input logic [15:0] instrAddr;
+	input logic [15:0] instrIn;
+
+	parameter c_IF  = 3'b001;
+	parameter c_ID  = 3'b010;
+	parameter c_EX  = 3'b011;
+	parameter c_MEM = 3'b100;
+	parameter c_WB  = 3'b101;
+
+	parameter c_ALU_REG = 4'b0001;
+
+	parameter c_ADD_IMM = 4'b0010;
+	parameter c_OR_IMM  = 4'b0011;
+
+	parameter c_LOAD    = 4'b0100;
+	parameter c_STORE   = 4'b0101;
+
+	parameter c_JUMP    = 4'b0110;
+	parameter c_BRANCH  = 4'b0111;
+
+	parameter c_ADD     = 3'b001;
+	parameter c_OR      = 3'b010;
+
+	`define true 1
+	`include "tidal.sv"
+
+	`begin_tda(ops)
+
+		//Extra functions
+		function [7:0] read_register;		//Taking the index as input, it returns the value saved inside REG_FILE
+			input [2:0] index;
+			read_register = (index==0 ? 8'h00 : REG_FILE[index]);		//If index=0, the value is not read (as position 0 from REG_FILE cannot be read)
+		endfunction
+
+		//Sequences
+		sequence check_all_func_steps;
+			t ##1 CONTROL_STATE == c_ID and			//We check the instruction goes through all steps.
+			t ##2 CONTROL_STATE == c_EX and			//This function should be called in every property to ensure that
+			t ##3 CONTROL_STATE == c_MEM and		//all instructions are simulated following the right progression.
+			t ##4 CONTROL_STATE == c_WB;
+		endsequence
+		
+		//Properties
+		property or_imm;
+			logic [2:0] rs1;
+			logic [2:0] rd;
+			logic [5:0] imm;
+			logic [7:0] content_rs1;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and		//Address (inside REG_FILE) where source value 1 (rs1) is stored
+			t ##0 set_freeze(rd, instrIn[8:6]) and
+			t ##0 set_freeze(imm, instrIn[5:0]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_OR_IMM
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+      //Operation is only checked if destination register index is not 0, asposition 0 from REG_FILE cannot be read
+			t ##5 rd==0 ? 1 : read_register(rd) == (content_rs1 | (imm[5] ? {2'b11, imm} : {2'b00, imm}));
+		endproperty
+
+		property or_reg;
+			logic [2:0] rd;
+			logic [2:0] rs1;
+			logic [2:0] rs2;
+			logic [7:0] content_rs1;
+			logic [7:0] content_rs2;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and
+			t ##0 set_freeze(rs2, instrIn[8:6]) and
+			t ##0 set_freeze(rd, instrIn[5:3]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 set_freeze(content_rs2, read_register(rs2)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_ALU_REG and
+			t ##0 instrIn[2:0] == c_OR
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+			t ##5 rd==0 ? 1 : read_register(rd) == (content_rs1 | content_rs2);
+		endproperty
+
+		property add_imm;
+			logic [2:0] rs1;
+			logic [2:0] rd;
+			logic [5:0] imm;
+			logic [7:0] content_rs1;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and		//Address (inside REG_FILE) where source value 1 (rs1) is stored
+			t ##0 set_freeze(rd, instrIn[8:6]) and
+			t ##0 set_freeze(imm, instrIn[5:0]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_ADD_IMM
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+			//Operation is only checked if destination register index is not 0, asposition 0 from REG_FILE cannot be read
+			t ##5 rd==0 ? 1 : read_register(rd) == (content_rs1 + (imm[5] ? {2'b11, imm} : {2'b00, imm}));
+		endproperty
+
+		property add_reg;
+			logic [2:0] rd;
+			logic [2:0] rs1;
+			logic [2:0] rs2;
+			logic [7:0] content_rs1;
+			logic [7:0] content_rs2;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and
+			t ##0 set_freeze(rs2, instrIn[8:6]) and
+			t ##0 set_freeze(rd, instrIn[5:3]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 set_freeze(content_rs2, read_register(rs2)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_ALU_REG and
+			t ##0 instrIn[2:0] == c_ADD
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+			t ##5 rd==0 ? 1 : read_register(rd) == (content_rs1 + content_rs2);
+		endproperty
+
+		property load;
+			logic [2:0] rs1;
+			logic [2:0] rd;
+			logic [5:0] imm;
+			logic [7:0] content_rs1;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and
+			t ##0 set_freeze(rd, instrIn[8:6]) and
+			t ##0 set_freeze(imm, instrIn[5:0]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_LOAD
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+			//Operation is only checked if destination register index is not 0, asposition 0 from REG_FILE cannot be read
+			t ##5 dataAddr == content_rs1 + (imm[5] ? {2'b11, imm} : {2'b00, imm}) and		//Both dataAddr and dataIn are validated!!
+			t ##5 rd==0 ? 1 : read_register(rd) == $past(dataIn, 2);		//Loaded value is inside dataIn ONLY during c_MEM phase (so delay must be ##3 [or just use past])
+		endproperty
+
+		property store;
+			logic [2:0] rs1;
+			logic [2:0] rs2;
+			logic [5:0] imm;
+			logic [7:0] content_rs1;
+			logic [7:0] content_rs2;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and
+			t ##0 set_freeze(rs2, instrIn[8:6]) and
+			t ##0 set_freeze(imm, instrIn[5:0]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 set_freeze(content_rs2, read_register(rs2)) and
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_STORE
+			implies
+			check_all_func_steps and						//We check the instruction goes through all steps
+			t ##3 writeEnable == 1'b1 and						//writeEnable is only high in the c_MEM stage
+			t ##5 dataAddr == content_rs1 + (imm[5] ? {2'b11, imm} : {2'b00, imm}) and		//writeEnable, dataAddr and dataOut are validated!!
+			t ##5 dataOut == content_rs2;						//The value to be stored is kept in dataOut from c_MEM on (so delay can be ##5)...
+		endproperty
+
+		property jump;
+			logic [11:0] imm;
+			logic [15:0] pre_addr;
+
+			t ##0 set_freeze(imm, instrIn[11:0]) and
+			t ##0 set_freeze(pre_addr, instrAddr) and		//Current address is stored for later
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_JUMP
+			implies
+			t ##1 CONTROL_STATE == c_ID and				//JUMP/BRANCH instructions are already executed in the 2 stage of the instruction execution (c_ID - decode). 
+			t ##2 CONTROL_STATE == c_IF and				//In the clock cycle a new instruction starts with c_IF - fetch stage --> ISA confirmed.
+			//All components must have the same width to avoid errors, so 16'b2.
+			t ##2 instrAddr == pre_addr + 16'd2 + (imm[11] ? {{4{1'b1}}, imm} : {{4{1'b0}}, imm});
+		endproperty
+
+		property branch;
+			logic [2:0] rs1;
+			logic [8:0] imm;
+			logic [7:0] content_rs1;
+			logic [15:0] pre_addr;
+
+			t ##0 set_freeze(rs1, instrIn[11:9]) and
+			t ##0 set_freeze(imm, instrIn[8:0]) and
+			t ##0 set_freeze(content_rs1, read_register(rs1)) and
+			t ##0 set_freeze(pre_addr, instrAddr) and		//Current address is stored for later
+			t ##0 CONTROL_STATE == c_IF and
+			t ##0 instrIn[15:12] == c_BRANCH
+			implies
+			t ##1 CONTROL_STATE == c_ID and				//JUMP/BRANCH instructions are already executed in the 2 stage of the instruction execution (c_ID - decode). 
+			t ##2 CONTROL_STATE == c_IF and				//In the clock cycle a new instruction starts with c_IF - fetch stage --> ISA confirmed.
+			//All components in the addition must have the same width to avoid errors, so 16'b2 and 16'b0 (not 2 and 0).
+			t ##2 instrAddr == pre_addr + 16'd2 + (content_rs1==0 ? (imm[8] ? {{7{1'b1}}, imm} : {{7{1'b0}}, imm}) : 16'd0);
+			//NOTE: Brackets "({" are really important. They cannot be skipped, otherwise could make the whole function fails...
+		endproperty
+
+		// assert your properties
+		//5.1 Verify the instructions OR_IMM, OR_REG, ADD_IMM and ADD_REG
+		a_or_imm: assert property(@(posedge clk) disable iff (reset) or_imm);
+		a_or_reg: assert property(@(posedge clk) disable iff (reset) or_reg);
+		a_add_imm: assert property(@(posedge clk) disable iff (reset) add_imm);
+		a_add_reg: assert property(@(posedge clk) disable iff (reset) add_reg);
+
+		//5.2 Verify the LOAD and STORE instructions.
+		//For LOAD, show that the memory contents end up in the destination register.
+		a_load: assert property(@(posedge clk) disable iff (reset) load);
+		//For STORE, show that right data is sent to memory correctly at the right time point.
+		a_store: assert property(@(posedge clk) disable iff (reset) store);
+
+		//5.3 Verify the control flow instructions JUMP and BRANCH.
+		a_jump: assert property(@(posedge clk) disable iff (reset) jump);
+		a_branch: assert property(@(posedge clk) disable iff (reset) branch);
+
+	`end_tda
+
+endmodule
+
+// your bind statement
+bind proc proc_property_suite inst_proc_property_suite(.*);
